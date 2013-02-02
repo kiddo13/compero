@@ -7,9 +7,15 @@
 
   "browser_action": {
     "default_icon": "icon.png",
+    "defaul_title": "Compero",
     "default_popup": "popup.html"
   },
+
   "permissions": [
-    "tabs", "http://*/*", "https://*/*"
+    "storage",
+    "tabs",
+    "http://*/*",
+    "https://*/*",
+    "chrome://favicon/"
   ]
 }
