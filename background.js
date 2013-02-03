@@ -12,4 +12,4 @@ var addImage = function(info, tab) {
     images.push(info.srcUrl);
 }
 
-chrome.contextMenus.create({"title": "add to compero", "contexts": ["image"], "onclick": addImage});
+chrome.contextMenus.create({"title": "Add to Compero", "contexts": ["image"], "onclick": addImage});
