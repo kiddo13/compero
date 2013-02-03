@@ -3,7 +3,16 @@
 
   "name": "Image Comparer",
   "description": "Compares 2 or more images",
+  "homepage_url": "https://github.com/wlzch/compero.git",
   "version": "0.1",
+
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+
+  "offline_enabled": true,
 
   "permissions": [
     "storage",
