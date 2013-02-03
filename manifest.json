@@ -5,17 +5,23 @@
   "description": "Compares 2 or more images",
   "version": "0.1",
 
-  "browser_action": {
-    "default_icon": "icon.png",
-    "defaul_title": "Compero",
-    "default_popup": "popup.html"
-  },
-
   "permissions": [
     "storage",
     "tabs",
     "http://*/*",
     "https://*/*",
+    "contextMenus",
     "chrome://favicon/"
-  ]
+  ],
+
+  "background": {
+      "scripts": ["background.js"]
+  },
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "defaul_title": "Compero",
+    "default_popup": "popup.html"
+  }
+
 }

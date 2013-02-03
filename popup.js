@@ -1,56 +1,75 @@
-var started;
-document.addEventListener('DOMContentLoaded', function () {
-    var imageContainer = document.getElementById('images');
-    var storage = chrome.storage.local;
+var storage, bg, imageContainer;
+var getImages = function(callback) {
+    var images;
+    storage.get('images', function(items) {
+        images = items.images || [];
 
-    var getImages = function(callback) {
-        var images;
-        storage.get('images', function(items) {
-            images = items.images || [];
+        callback(images);
+    });
+}
 
-            callback(images);
-        });
+var insertImage = function(src) {
+    var image = $('<img>');
+    image.addClass('image');
+    image.attr('src', src);
+    image.appendTo(imageContainer);
+}
+
+var addImageToStorage = function(src) {
+    getImages(function(images) {
+        images.push(src);
+        storage.set({images: images});
+    });
+}
+
+var loadBackgroundImages = function() {
+    var bgImages = bg.getImages();
+    for (var i = 0, len = bgImages.length; i < len; i++) {
+        insertImage(bgImages[i]); 
+        addImageToStorage(bgImages[i]);
     }
+    bg.clearImages();
+}
 
-    var insertImage = function(src) {
-        var image = document.createElement('img');
-        image.src = src;
-        image.className = 'image';
-        imageContainer.appendChild(image);
-    }
+var loadStorage = function() {
+    getImages(function(images) {
+        for (var i = 0, len = images.length; i < len; i++) {
+            insertImage(images[i]);
+        }
+    });
+}
 
-    var addImageToStorage = function(src) {
-        getImages(function(images) {
-            images.push(src);
-            storage.set({images: images});
-        });
-    }
-
-    var loadStorage = function() {
-        getImages(function(images) {
-            for (var i = 0, len = images.length; i < len; i++) {
-                insertImage(images[i]);
-            }
-        });
-    }
-
+var loadImages = function() {
+    loadBackgroundImages();
     loadStorage();
-    if (started === undefined) {
-        started = true;
-        chrome.tabs.executeScript(null, {file: "content_script.js"});
+}
 
-        var onMessageListener = function(request, sender, sendResponse) {
-            insertImage(request.src);
-            addImageToStorage(request.src);
+var onMessageListener = function(request, sender, sendResponse) {
+    insertImage(request.src);
+    addImageToStorage(request.src);
+}
+
+var clearClicked = function() {
+    storage.clear();
+    $('.image').remove();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    bg = chrome.extension.getBackgroundPage();
+    storage = chrome.storage.local;
+    imageContainer = $('#images');
+    var slider = $('#slider');
+    $('#clear-images').click(clearClicked);
+    slider.slider({
+        min: 200,
+        max: 800,
+        step: 10,
+        value: 200,
+        slide: function(event, ui) {
+            var images = $('.image');
+            images.width(slider.slider('value')+"px");
+            images.height(slider.slider('value')+"px");
         }
-        var clearClicked = function() {
-            storage.clear();
-            var images = document.getElementsByClassName('image');
-            for (var i = 0, len = images.length; i < len; i++) {
-                imageContainer.removeChild(images[i]);
-            }
-        }
-        chrome.extension.onMessage.addListener(onMessageListener);
-        document.getElementById('clear-images').onclick = clearClicked;
-    }
+    });
+    loadImages();
 });

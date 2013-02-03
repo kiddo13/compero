@@ -1,0 +1,25 @@
+#controls {
+    margin-bottom: 20px;
+}
+
+#controls div {
+    float: left;
+    margin-right: 20px;
+}
+
+#slider {
+    width: 200px;
+    margin-top: 5px;
+}
+
+#images {
+    padding-top: 20px;
+    width: 800px;
+    clear: both;
+}
+
+.image {
+    width: 200px;
+    height: 200px;
+    float: left;
+}
